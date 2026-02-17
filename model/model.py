@@ -68,5 +68,11 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics='accuracy')
 
 
-
+train = model.fit(
+    x_padded_training, y_training,
+    epochs=10,
+    batch_size= 50,
+    verbose=1,
+    validation_data= (x_padded_validation, y_validation)
+)
 
