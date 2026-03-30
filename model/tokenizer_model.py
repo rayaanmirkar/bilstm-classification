@@ -50,7 +50,7 @@ x_padded_testing = pad_sequences(x_testing_int, maxlen = 18000, padding = "post"
 x_padded_validation = pad_sequences(x_validation_int, maxlen = 18000, padding = "post", truncating = 'post')
 #*******************************************************************************************
 
-
+# the padded training ones are final 
 
 
 #model architecture

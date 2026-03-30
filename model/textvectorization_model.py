@@ -2,10 +2,11 @@ import tensorflow as tf
 import keras
 import pandas as pd
 import numpy as np
-#from keras.preprocessing import pad_sequences
+from keras.preprocessing import pad_sequences
 from keras.layers import Bidirectional
 from keras.layers import Embedding, Dense, LSTM, Input, Conv1D, MaxPooling1D, Dropout, TextVectorization
 from keras.models import Sequential
+
 
 # x = protein sequences, y = binary lifestyle
 
@@ -40,6 +41,9 @@ vectorization_layer = TextVectorization(
     output_sequence_length= 18000)
 
 vectorization_layer.adapt(x_training)
+vectorization_layer.adapt(x_testing)
+vectorization_layer.adapt(x_validation)
+
 
 
 #model architecture
