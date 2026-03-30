@@ -20,7 +20,7 @@ validation_df = pd.read_csv('validation_data.csv')
 raw_seqs = df['protein_sequence'].tolist
 labels = df['Temperate (empirical)'].value
 '''
-# *******INITIALIZE DATAFRAMES**********
+# init dataframes.
 x_training_raw = training_df['protein_sequence'].tolist
 y_training = training_df['Binary Lifestyle']
 
@@ -29,29 +29,25 @@ y_testing = testing_df['Binary Lifestyle']
 
 x_validation_raw = validation_df['protein_sequence'].tolist
 y_validation = validation_df['Binary Lifestyle']
-#****************************************
 
-#*****INITIALIZE AND FIT TOKENIZER*******
+
+#fit tokenizer
 all_texts = x_testing_raw + x_training_raw + x_validation_raw
 tokenizer = Tokenizer(char_level = True, oov_token = '?')
 tokenizer.fit_on_texts(all_texts)
-#***************************************
 
-#*************Sequences to integers************************
+#sequences --> integers
 x_training_int = tokenizer.texts_to_sequences(x_training_raw)
 x_testing_int = tokenizer.texts_to_sequences(x_testing_raw)
 x_validation_int = tokenizer.texts_to_sequences(x_validation_raw)
-#**************************************************************
 
 
-#************PADDED SEQUENCES***********************************
+#pad sequences
 x_padded_training = pad_sequences(x_training_int, maxlen = 18000, padding = "post", truncating = 'post')
 x_padded_testing = pad_sequences(x_testing_int, maxlen = 18000, padding = "post", truncating = 'post')
 x_padded_validation = pad_sequences(x_validation_int, maxlen = 18000, padding = "post", truncating = 'post')
-#*******************************************************************************************
 
 # the padded training ones are final 
-
 
 #model architecture
 model = Sequential()
