@@ -2,7 +2,7 @@ import tensorflow as tf
 import keras
 import pandas as pd
 import numpy as np
-from keras.preprocessing import pad_sequences
+#from keras.preprocessing import pad_sequences
 from keras.layers import Bidirectional
 from keras.layers import Embedding, Dense, LSTM, Input, Conv1D, MaxPooling1D, Dropout, TextVectorization
 from keras.models import Sequential
@@ -13,9 +13,9 @@ from keras.models import Sequential
 input_shape = 18000
 max_features = 18000
 
-training_df = pd.read_csv('training_data.csv')
-testing_df = pd.read_csv('testing_data.csv')
-validation_df = pd.read_csv('validation_data.csv')
+training_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\training_data.csv')
+testing_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\testing_data.csv')
+validation_df = pd.read_csv(r"C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\validation_data.csv")
 
 '''
 raw_seqs = df['protein_sequence'].tolist
