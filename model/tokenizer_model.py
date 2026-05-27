@@ -2,7 +2,8 @@ import tensorflow as tf
 import keras
 import pandas as pd
 import numpy as np
-from keras.preprocessing import Tokenizer, pad_sequences
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Bidirectional
 from keras.layers import Embedding, Dense, LSTM, Input, Conv1D, MaxPooling1D, Dropout
 from keras.models import Sequential
@@ -17,18 +18,18 @@ testing_df = pd.read_csv('testing_data.csv')
 validation_df = pd.read_csv('validation_data.csv')
 
 '''
-raw_seqs = df['protein_sequence'].tolist
+raw_seqs = df['protein_sequence'].tolist()
 labels = df['Temperate (empirical)'].value
 '''
 # init dataframes.
-x_training_raw = training_df['protein_sequence'].tolist
-y_training = training_df['Binary Lifestyle']
+x_training_raw = training_df['protein_sentence'].tolist()
+y_training = training_df['Binary Lifestyle'].values()
 
-x_testing_raw = testing_df['protein_sequence'].tolist
-y_testing = testing_df['Binary Lifestyle']
+x_testing_raw = testing_df['protein_sentence'].tolist()
+y_testing = testing_df['Binary Lifestyle'].values()
 
-x_validation_raw = validation_df['protein_sequence'].tolist
-y_validation = validation_df['Binary Lifestyle']
+x_validation_raw = validation_df['protein_sentence'].tolist()
+y_validation = validation_df['Binary Lifestyle'].values()
 
 
 #fit tokenizer
@@ -55,7 +56,7 @@ model = Sequential()
 model.add(Embedding(input_dim=21, output_dim=16,mask_zero=True))
 model.add(Conv1D(filters = 128, kernel_size=15, strides=3))
 model.add(MaxPooling1D(pool_size=20, strides= 5,))
-model.add(Bidirectional(LSTM(units=256, activation='ReLU', dropout=0.2)))
+model.add(Bidirectional(LSTM(units=256, activation='tanh', dropout=0.2)))
 model.add(Dropout(0.2))
 model.add(Dense(1, activation='sigmoid'))
 

@@ -24,37 +24,43 @@ labels = df['Temperate (empirical)'].value
 
 
 #start dataframes
-# training_df['protein_sentence']
-x_training = (training_df['protein_sentence'])
-y_training = (training_df['Binary Lifestyle'])
 
-x_testing = (testing_df['protein_sentence'])
-y_testing = testing_df['Binary Lifestyle'].to_list()
+x_training = training_df['protein_sentence'].astype(str).tolist()
+y_training = training_df['Binary Lifestyle'].tolist()
 
-x_validation = validation_df['protein_sentence'].to_list()
-y_validation = validation_df['Binary Lifestyle'].to_list()
+x_testing = testing_df['protein_sentence'].astype(str).tolist()
+y_testing = testing_df['Binary Lifestyle'].tolist()
+
+x_validation = validation_df['protein_sentence'].astype(str).tolist()
+y_validation = validation_df['Binary Lifestyle'].tolist()
+
+x_training_dataset = tf.data.Dataset.from_tensor_slices(x_training).batch(32)
+x_testing_dataset = tf.data.Dataset.from_tensor_slices(x_testing).batch(32)
+x_validation_dataset = tf.data.Dataset.from_tensor_slices(x_validation).batch(32)
 
 
 vectorization_layer = TextVectorization(
     max_tokens= 25,
-    standardize=None,
+    standardize="lower_and_strip_punctuation",
     output_mode="int",
     pad_to_max_tokens= True,
     output_sequence_length= 18000, 
     split="character")
 
-vectorization_layer.adapt(x_training)
 
+vectorization_layer.adapt(x_training_dataset)
+vectorization_layer.adapt(x_testing_dataset)
+vectorization_layer.adapt(x_validation_dataset)
 
 
 
 #model architecture
 model = Sequential()
 model.add(vectorization_layer)
-model.add(Embedding(input_dim=26, output_dim=16))
+model.add(Embedding(input_dim=21, output_dim=16,mask_zero=True))
 model.add(Conv1D(filters = 128, kernel_size=15, strides=3))
 model.add(MaxPooling1D(pool_size=20, strides= 5,))
-model.add(Bidirectional(LSTM(units=256, activation='tanh', reccurent_activation = 'sigmoid', dropout=0.2)))
+model.add(Bidirectional(LSTM(units=256, activation='relu', dropout=0.2)))
 model.add(Dropout(0.2))
 model.add(Dense(1, activation='sigmoid'))
 
