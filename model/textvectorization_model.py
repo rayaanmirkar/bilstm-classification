@@ -21,18 +21,37 @@ validation_df = pd.read_csv(r"C:\Users\\raypi\\coding\\SoftwareProjects\\phager\
 raw_seqs = df['protein_sequence'].tolist
 labels = df['Temperate (empirical)'].value
 '''
+print(validation_df['Binary Lifestyle'].head(20))
+print(validation_df['Binary Lifestyle'].unique())
+print(validation_df['Binary Lifestyle'].dtype)
+print(validation_df['Binary Lifestyle'].isna().sum())
 
 
 #start dataframes
 # training_df['protein_sentence']
-x_training = (training_df['protein_sentence'])
-y_training = (training_df['Binary Lifestyle'])
+x_training = (training_df['protein_sentence']).astype(str).tolist()
+y_training = (training_df['Binary Lifestyle']).astype(int).tolist()
 
-x_testing = (testing_df['protein_sentence'])
-y_testing = testing_df['Binary Lifestyle'].to_list()
+x_testing = (testing_df['protein_sentence']).astype(str).tolist()
+y_testing = testing_df['Binary Lifestyle'].astype(int).tolist()
 
-x_validation = validation_df['protein_sentence'].to_list()
-y_validation = validation_df['Binary Lifestyle'].to_list()
+x_validation = validation_df['protein_sentence'].astype(str).tolist()
+y_validation = validation_df['Binary Lifestyle'].astype(int).tolist()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 vectorization_layer = TextVectorization(
@@ -40,21 +59,21 @@ vectorization_layer = TextVectorization(
     standardize=None,
     output_mode="int",
     pad_to_max_tokens= True,
-    output_sequence_length= 18000, 
+    output_sequence_length= 5000, 
     split="character")
 
 vectorization_layer.adapt(x_training)
 
-
+#print(len(vectorization_layer.get_vocabulary()))
 
 
 #model architecture
 model = Sequential()
 model.add(vectorization_layer)
 model.add(Embedding(input_dim=26, output_dim=16))
-model.add(Conv1D(filters = 128, kernel_size=15, strides=3))
+model.add(Conv1D(filters = 128, kernel_size=15, strides=3, activation= 'relu'))
 model.add(MaxPooling1D(pool_size=20, strides= 5,))
-model.add(Bidirectional(LSTM(units=256, activation='tanh', reccurent_activation = 'sigmoid', dropout=0.2)))
+model.add(Bidirectional(LSTM(units=128, dropout=0.2)))
 model.add(Dropout(0.2))
 model.add(Dense(1, activation='sigmoid'))
 
@@ -66,7 +85,7 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 train = model.fit(
     x_training, y_training,
     epochs=10,
-    batch_size= 50,
+    batch_size= 8,
     verbose=1,
-    validation_data= (x_validation, y_validation)
+    validation_data= (x_validation, y_validation),
 )
