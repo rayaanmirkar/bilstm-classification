@@ -9,22 +9,23 @@ from keras.models import Sequential
 
 
 # x = protein sequences, y = binary lifestyle
-
-input_shape = 18000
+# input_shape = 18000
 max_features = 18000
-
 training_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\training_data.csv')
 testing_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\testing_data.csv')
 validation_df = pd.read_csv(r"C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\validation_data.csv")
 
-'''
-raw_seqs = df['protein_sequence'].tolist
-labels = df['Temperate (empirical)'].value
-'''
-print(validation_df['Binary Lifestyle'].head(20))
-print(validation_df['Binary Lifestyle'].unique())
+
+
+
+
+
+print(validation_df['Binary Lifestyle'].value_counts(dropna=False))
 print(validation_df['Binary Lifestyle'].dtype)
-print(validation_df['Binary Lifestyle'].isna().sum())
+print(validation_df[validation_df['Binary Lifestyle'].isna()])
+
+
+
 
 
 #start dataframes
@@ -37,12 +38,6 @@ y_testing = testing_df['Binary Lifestyle'].astype(int).tolist()
 
 x_validation = validation_df['protein_sentence'].astype(str).tolist()
 y_validation = validation_df['Binary Lifestyle'].astype(int).tolist()
-
-
-
-
-
-
 
 
 
