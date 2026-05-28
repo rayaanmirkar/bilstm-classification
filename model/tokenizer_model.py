@@ -6,7 +6,9 @@ import numpy as np
 from keras.layers import Bidirectional
 from keras.layers import Embedding, Dense, LSTM, Input, Conv1D, MaxPooling1D, Dropout, TextVectorization
 from keras.models import Sequential
+
 max_features = 18000
+
 training_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\training_data.csv')
 testing_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\testing_data.csv')
 validation_df = pd.read_csv(r"C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\validation_data.csv")
@@ -19,6 +21,8 @@ y_testing = testing_df['Binary Lifestyle'].to_numpy(dtype=np.float32)
 
 x_validation = validation_df['protein_sentence'].astype(str).tolist()
 y_validation = validation_df['Binary Lifestyle'].to_numpy(dtype=np.float32)
+
+
 vectorization_layer = TextVectorization(
     max_tokens= 25,
     standardize=None,
@@ -29,6 +33,8 @@ vectorization_layer = TextVectorization(
 
 vectorization_layer.adapt(x_training)
 dim_size = len(vectorization_layer.get_vocabulary())
+
+
 #model architecture
 model = Sequential()
 model.add(vectorization_layer)
