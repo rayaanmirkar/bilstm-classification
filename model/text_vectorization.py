@@ -35,12 +35,12 @@ vectorization_layer = TextVectorization(
     split="character")
 
 vectorization_layer.adapt(x_training)
-dim_size = len(vectorization_layer.get_vocabulary()) # maybe use vocab size method?
+dim_size = vectorization_layer.vocabulary_size() # maybe use vocab size method?
 
 #model architecture
 model = Sequential()
 model.add(vectorization_layer)
-model.add(Embedding(input_dim=(dim_size), output_dim=16))
+model.add(Embedding(input_dim=(dim_size+1), output_dim=16))
 model.add(Conv1D(filters = 128, kernel_size=15, strides=3, activation= 'relu'))
 model.add(MaxPooling1D(pool_size=20, strides= 5,))
 model.add(Bidirectional(LSTM(units=128, dropout=0.2)))
