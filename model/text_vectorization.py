@@ -29,9 +29,10 @@ y_validation = validation_df['Binary Lifestyle'].to_numpy(dtype=np.float32)
 
 
 vectorization_layer = TextVectorization(
-    max_tokens= 25,
+    max_tokens= 30,
     standardize=None,
     output_mode="int",
+    output_sequence_length=50000,
     split="character")
 
 vectorization_layer.adapt(x_training)
@@ -42,14 +43,13 @@ model = Sequential()
 model.add(vectorization_layer)
 model.add(Embedding(input_dim=(dim_size+1), output_dim=16))
 model.add(Conv1D(filters = 128, kernel_size=15, strides=3, activation= 'relu'))
-model.add(MaxPooling1D(pool_size=20, strides= 5,))
 model.add(Bidirectional(LSTM(units=128, dropout=0.2)))
 model.add(Dropout(0.2))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-train_ds = tf.data.Dataset.from_tensor_slices((x_training, y_training)).padded_batch(8, ([None], []))
-val_ds = tf.data.Dataset.from_tensor_slices((x_validation, y_validation)).padded_batch(8, ([None], []))
+train_ds = tf.data.Dataset.from_tensor_slices((x_training, y_training)).batch(8)
+val_ds = tf.data.Dataset.from_tensor_slices((x_validation, y_validation)).batch(8)
 
 
 train = model.fit(
