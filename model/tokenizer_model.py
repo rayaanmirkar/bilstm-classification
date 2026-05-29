@@ -13,6 +13,11 @@ training_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\b
 testing_df = pd.read_csv(r'C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\testing_data.csv')
 validation_df = pd.read_csv(r"C:\Users\\raypi\\coding\\SoftwareProjects\\phager\\building_data\\validation_data.csv")
 
+training_df = training_df.dropna(subset=['protein_sentence', 'Binary Lifestyle'])
+testing_df = testing_df.dropna(subset=['protein_sentence', 'Binary Lifestyle'])
+validation_df = validation_df.dropna(subset=['protein_sentence', 'Binary Lifestyle'])
+
+
 x_training = (training_df['protein_sentence']).astype(str).tolist()
 y_training = (training_df['Binary Lifestyle']).to_numpy(dtype=np.float32)
 
@@ -27,13 +32,10 @@ vectorization_layer = TextVectorization(
     max_tokens= 25,
     standardize=None,
     output_mode="int",
-    pad_to_max_tokens= True,
-    output_sequence_length= 5000, 
     split="character")
 
 vectorization_layer.adapt(x_training)
-dim_size = len(vectorization_layer.get_vocabulary())
-
+dim_size = len(vectorization_layer.get_vocabulary()) # maybe use vocab size method?
 
 #model architecture
 model = Sequential()
@@ -46,9 +48,8 @@ model.add(Dropout(0.2))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-train_ds = tf.data.Dataset.from_tensor_slices((x_training, y_training)).batch(8)
-val_ds = (tf.data.Dataset.from_tensor_slices((x_validation, y_validation))).batch(8)
-
+train_ds = tf.data.Dataset.from_tensor_slices((x_training, y_training)).padded_batch(8, ([None], []))
+val_ds = tf.data.Dataset.from_tensor_slices((x_validation, y_validation)).padded_batch(8, ([None], []))
 
 
 train = model.fit(
